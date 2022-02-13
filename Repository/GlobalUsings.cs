@@ -1,0 +1,14 @@
+﻿global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
+global using Model.Entities;
+global using Model.Entities.Identity;
+global using AutoMapper;
+global using AutoMapper.QueryableExtensions;
+global using Model.Dtos;
+global using Model.Params;
+global using Repository.Data;
+global using Repository.Extensions;
+global using Repository.Helpers;
+global using Repository.Interfaces;
+global using Model.Enums;

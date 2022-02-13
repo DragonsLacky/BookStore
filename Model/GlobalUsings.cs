@@ -1,0 +1,9 @@
+﻿global using System.ComponentModel.DataAnnotations;
+global using System.Text.Json.Serialization;
+global using Model.Entities.Identity;
+global using Microsoft.AspNetCore.Identity;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using System.Text.Json;
+global using Microsoft.AspNetCore.Http;
+global using Model.Helpers;
+global using System.Security.Claims;
