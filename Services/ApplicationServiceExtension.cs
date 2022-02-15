@@ -1,3 +1,7 @@
+using Services.Helpers;
+using Services.Services;
+using Services.Services.Interfaces;
+
 namespace Services;
 
 public static class ApplicationServiceExtension
@@ -9,6 +13,7 @@ public static class ApplicationServiceExtension
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<IRepositoryUnit, RepositoryUnit>();
+        services.AddScoped<IUserService, UserService>();
         services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
         services.AddDbContext<DataContext>(options =>
         {

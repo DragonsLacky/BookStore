@@ -11,7 +11,7 @@ public class MessageDto
     public string RecipientPhotoUrl { get; set; }
     public string Content { get; set; }
     public DateTime? DateRead { get; set; }
-    public DateTime MessageSent { get; set; } = DateTime.UtcNow;
+    public DateTime MessageSent { get; set; } = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
 
 
     [JsonIgnore]

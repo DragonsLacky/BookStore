@@ -2,15 +2,22 @@ namespace Repository.Interfaces;
 
 public interface IUserRepository
 {
-    void Update(AppUser user);
-
     Task<IEnumerable<AppUser>> GetUsersAsync();
 
     Task<AppUser> GetUserByIdAsync(int id);
 
     Task<AppUser> GetUserByUsernameAsync(string username);
-    
-    Task<MemberDto> GetMemberByUsername(string username);
 
-    Task<string> GetUserGender(string username);
+    Task<UserDto> GetUserByUsernameClientAsync(string username);
+    Task<PagedList<UserDto>> GetUsersClientAsync(UserParams userParams);
+
+    public Task<PagedList<CommentDto>> GetCommentsForBook(CommentParams commentParams);
+
+    public Task<ICollection<BookDto>> GetCartBooks(string username);
+
+    public void AddToCart(Book book, string username);
+
+    public void RemoveFromCart(Book book, string username);
+
+    public Task<ICollection<BookDto>> GetOwnedBooksForUser(int userId);
 }

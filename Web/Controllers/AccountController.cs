@@ -1,23 +1,29 @@
-﻿namespace Web.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+using Model.Dtos.Creation;
+using Services.Services.Interfaces;
+
+namespace Web.Controllers;
 
 public class AccountController : BaseApiController
 {
     private readonly ITokenService _tokenService;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
 
     public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-        ITokenService tokenService, IMapper mapper)
+        ITokenService tokenService, IMapper mapper, IUserService userService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _tokenService = tokenService;
         _mapper = mapper;
+        _userService = userService;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+    public async Task<ActionResult<UserAuthDto>> Register(RegisterDto registerDto)
     {
         if (await UserExists(registerDto.UserName)) return BadRequest("Username is already taken");
 
@@ -33,17 +39,15 @@ public class AccountController : BaseApiController
 
         if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
-        return new UserDto
+        return new UserAuthDto
         {
             Username = user.UserName,
             Token = await _tokenService.CreateToken(user),
-            KnownAs = user.KnownAs,
-            Gender = user.Gender
         };
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+    public async Task<ActionResult<UserAuthDto>> Login(LoginDto loginDto)
     {
         var user = await _userManager.Users
             .Include(user => user.Photos)
@@ -55,13 +59,11 @@ public class AccountController : BaseApiController
 
         if (!result.Succeeded) return Unauthorized("Invalid Password");
 
-        return new UserDto
+        return new UserAuthDto
         {
             Username = user.UserName,
             Token = await _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(photo => photo.IsMain)?.Url,
-            KnownAs = user.KnownAs,
-            Gender = user.Gender
         };
     }
 
@@ -69,6 +71,41 @@ public class AccountController : BaseApiController
     public async Task<List<AppUser>> GetUsers()
     {
         return await _userManager.Users.ToListAsync();
+    }
+
+    [Authorize]
+    [HttpPost("cart/add/{isbn}")]
+    public async Task<ActionResult<bool>> AddToCart(string isbn)
+    {
+        var username = User.GetUsername();
+        return await _userService.AddBookToCart(isbn, username);
+    }
+
+    [Authorize]
+    [HttpPost("cart/remove/{isbn}")]
+    public async Task<ActionResult<bool>> RemoveFromCart(string isbn)
+    {
+        var username = User.GetUsername();
+        return await _userService.RemoveBookFromCart(isbn, username);
+    }
+
+    [Authorize]
+    [HttpGet("owned")]
+    public async Task<ActionResult<ICollection<BookDto>>> GetOwnedBooks()
+    {
+        return Ok(await _userService.GetOwnedBooks(User.GetUserId()));
+    }
+
+    [Authorize]
+    [HttpPut]
+    public async Task<ActionResult> BuyBooksInCart()
+    {
+        if (await _userService.BuyFromCart(User.GetUserId()))
+        {
+            return Ok();
+        }
+
+        return BadRequest("Could not buy the books");
     }
 
     private async Task<bool> UserExists(string username)

@@ -22,4 +22,37 @@ public static class QueryExtensions
                 msg.RecipientUsername == messageParams.Username && !msg.RecipientDeleted && msg.DateRead == null)
         };
     }
+
+    public static IQueryable<Book> OrderByField(this IQueryable<Book> query, string field, bool asc)
+    {
+        return field switch
+        {
+            "author" => asc
+                ? query.OrderBy(book => book.Author.Name)
+                    .ThenBy(book => book.Author.Lastname)
+                    .ThenBy(book => book.Author.Id)
+                : query.OrderByDescending(book => book.AuthorId)
+                    .ThenBy(book => book.Author.Lastname)
+                    .ThenBy(book => book.Author.Id),
+            "release" => asc
+                ? query.OrderBy(book => book.PublicationDate)
+                : query.OrderByDescending(book => book.PublicationDate),
+            _ => asc
+                ? query.OrderBy(book => book.Title.ToLower())
+                : query.OrderByDescending(book => book.Title.ToLower()),
+        };
+    }
+
+    public static IQueryable<Comment> OrderByField(this IQueryable<Comment> query, string? field, bool asc)
+    {
+        return field switch
+        {
+            "Stars" => asc
+                ? query.OrderBy(book => book.Rating)
+                : query.OrderByDescending(comment => comment.Rating),
+            _ => asc
+                ? query.OrderBy(comment => comment.CommentedOn)
+                : query.OrderByDescending(book => book.CommentedOn),
+        };
+    }
 }

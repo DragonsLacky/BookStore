@@ -8,11 +8,7 @@ import { LoginModalComponent } from '../components/modals/login-modal/login-moda
 import { RegisterModalComponent } from '../components/modals/register-modal/register-modal.component';
 import { sleep } from '../helpers/general.helpers';
 import { Controllers } from '../models/constants/api.constants';
-// import { sleep } from '../helpers/general';
-// import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
-// import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { User } from '../models/user';
-// import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root',
@@ -61,6 +57,7 @@ export class AccountService {
             this.setCurrentUser(user);
             // this.presenceService.startHubConnection(user);
           }
+          return user;
         })
       );
   }

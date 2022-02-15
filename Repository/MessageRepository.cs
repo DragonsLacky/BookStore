@@ -67,11 +67,11 @@ public class MessageRepository : IMessageRepository
             .Where
             (
                 m =>
-                    (m.Recipient.UserName == currentUsername
-                     && m.Sender.UserName == recipientUsername
+                    (m.RecipientUsername == currentUsername
+                     && m.SenderUsername == recipientUsername
                      && !m.RecipientDeleted)
-                    || (m.Recipient.UserName == recipientUsername
-                        && m.Sender.UserName == currentUsername
+                    || (m.RecipientUsername == recipientUsername
+                        && m.SenderUsername == currentUsername
                         && !m.SenderDeleted)
             )
             .OrderByDescending(m => m.MessageSent)

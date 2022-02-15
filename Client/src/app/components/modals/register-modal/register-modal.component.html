@@ -1,1 +1,102 @@
-<p>register-modal works!</p>
+<div *ngIf="registerForm" class="modal-body text-center">
+  <div
+    class="w-100 position-absolute d-flex justify-content-between font-weight-bold rounded py-2 px-3 fixed-top bg-light"
+  >
+    <span>Register</span>
+    <a
+      class="text-decoration-none text-dark"
+      href="#"
+      (click)="close()"
+      ><i class="x-hover fa fa-times"></i
+    ></a>
+  </div>
+  <form
+    [formGroup]="registerForm"
+    (ngSubmit)="registerForm.valid && register()"
+    autocomplete="off"
+    class="mt-5"
+  >
+    <h2 class="text-center text-primary">Sign up</h2>
+    <hr />
+    <div
+      class="d-flex justify-content-center form-group"
+      style="gap: 0.25rem"
+    >
+      <label class="control-label">Gender: </label>
+      <label class="radio-inline">
+        <input
+          type="radio"
+          value="male"
+          formControlName="gender"
+        />
+        Male
+      </label>
+      <label class="radio-inline">
+        <input
+          type="radio"
+          value="female"
+          formControlName="gender"
+        />
+        Female
+      </label>
+    </div>
+    <app-input-field
+      [formControl]="getUsernameControl()"
+      [label]="'Username'"
+    ></app-input-field>
+    <app-input-field
+      [formControl]="getPasswordControl()"
+      [label]="'Password'"
+      [type]="'password'"
+    ></app-input-field>
+    <app-input-field
+      [formControl]="getConfirmPasswordControl()"
+      [label]="'Confirm Password'"
+      [type]="'password'"
+    ></app-input-field>
+    <app-input-field
+      [formControl]="getKnownAsControl()"
+      [label]="'Known As'"
+    ></app-input-field>
+    <app-input-field
+      [formControl]="getCityControl()"
+      [label]="'City'"
+    ></app-input-field>
+    <app-input-field
+      [formControl]="getCountryControl()"
+      [label]="'Country'"
+    ></app-input-field>
+    <app-date-input
+      [formControl]="getDateOfBirthControl()"
+      [label]="'Date Of Birth'"
+      [maxDate]="maxDate"
+    ></app-date-input>
+
+    <div class="row" *ngIf="validationErrors.length > 0">
+      <ul class="text-danger">
+        <li *ngFor="let error of validationErrors">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="form-group text-center">
+      <button
+        [disabled]="registerForm.invalid"
+        class="btn btn-success mr-2"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="btn btn-outline-danger mr-2"
+        (click)="close()"
+      >
+        Close
+      </button>
+    </div>
+    <a (click)="switchToRegister()" href="#"
+      >Already have an account? log in</a
+    >
+  </form>
+</div>

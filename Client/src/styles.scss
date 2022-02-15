@@ -1,13 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
+@import '~bootswatch/dist/flatly/variables';
 @import '~bootstrap/scss/bootstrap';
+@import "~bootswatch/dist/flatly/bootswatch";
 
 /* Importing Datepicker SCSS file. */
 @import 'node_modules/ngx-bootstrap/datepicker/bs-datepicker';
 
 /* Importing toastr css */
 @import '~ngx-toastr/toastr';
-
-/* Importing the loading spinner */
-// @import 'node_modules/ngx-spinner/animations/ball-scale-multiple.css';

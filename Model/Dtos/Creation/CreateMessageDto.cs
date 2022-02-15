@@ -1,4 +1,4 @@
-namespace Model.Dtos;
+namespace Model.Dtos.Creation;
 
 public class CreateMessageDto
 {

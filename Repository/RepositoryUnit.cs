@@ -15,6 +15,7 @@ public class RepositoryUnit : IRepositoryUnit
 
     public IMessageRepository MessageRepository => new MessageRepository(_context, _mapper);
 
+    public IBookRepository BookRepository => new BookRepository(_context, _mapper);
 
     public bool HasChanges()
     {

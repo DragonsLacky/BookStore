@@ -1,3 +1,5 @@
+using Model.Dtos.Creation;
+
 namespace Services.Services;
 
 public class MessageHub : Hub
@@ -20,7 +22,9 @@ public class MessageHub : Hub
     {
         var httpContext = Context.GetHttpContext();
         var otherUser = httpContext?.Request.Query["user"].ToString();
-        var groupName = GetGroupName(Context?.User?.GetUsername(), otherUser);
+        var groupName =
+            GetGroupName(Context?.User?.GetUsername() ?? throw new Exception("No user with the provided username"),
+                otherUser);
         if (Context?.ConnectionId != null) await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         var group = await AddToGroup(groupName);
 
@@ -37,7 +41,7 @@ public class MessageHub : Hub
         await Clients.Caller.SendAsync("ReceiveMessageThread", messages as object);
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var group = await RemoveFromMessageGroup();
         await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);
@@ -46,7 +50,7 @@ public class MessageHub : Hub
 
     public async Task SendMessage(CreateMessageDto createMessageDto)
     {
-        var username = Context.User.GetUsername();
+        var username = Context?.User?.GetUsername();
         if (username == createMessageDto.RecipientUsername.ToLower())
         {
             throw new HubException("You cannot send messages to yourself");
@@ -77,7 +81,7 @@ public class MessageHub : Hub
         {
             var connections = await _tracker.GetConnectionsForUser(recipient.UserName);
             await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageNotification",
-                new {username = sender.UserName, knownAs = sender.KnownAs});
+                new {username = sender.UserName});
         }
 
         _repositoryUnit.MessageRepository.AddMessage(message);

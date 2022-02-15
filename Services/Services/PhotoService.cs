@@ -1,3 +1,5 @@
+using Services.Services.Interfaces;
+
 namespace Services.Services;
 
 public class PhotoService : IPhotoService

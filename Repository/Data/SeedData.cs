@@ -11,7 +11,7 @@ public class SeedData
         // if (users == null) return;
 
         if (await roleManager.Roles.AnyAsync()) return;
-        
+
         foreach (var role in Enum.GetNames<AppRoleEnum>().Select(role => new AppRole(role)).ToList())
         {
             await roleManager.CreateAsync(role);
@@ -30,7 +30,8 @@ public class SeedData
 
         var admin = new AppUser
         {
-            UserName = "admin"
+            UserName = "admin",
+            DateOfBirth = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc)
         };
         await userManager.CreateAsync(admin, "P@ss10");
         await userManager.AddToRolesAsync(admin, (new[] {memberRole, adminRole}));

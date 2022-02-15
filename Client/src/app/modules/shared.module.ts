@@ -4,13 +4,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TimeagoModule } from 'ngx-timeago';
-// import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    // NgxSpinnerModule,
+    NgxSpinnerModule,
     NgxGalleryModule,
     FileUploadModule,
     TimeagoModule.forRoot(),
@@ -19,7 +19,7 @@ import { TimeagoModule } from 'ngx-timeago';
     }),
   ],
   exports: [
-    // NgxSpinnerModule,
+    NgxSpinnerModule,
     TimeagoModule,
     NgxGalleryModule,
     FileUploadModule,

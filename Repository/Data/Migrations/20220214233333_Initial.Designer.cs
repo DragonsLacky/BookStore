@@ -12,8 +12,8 @@ using Repository.Data;
 namespace Repository.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220212004115_UpdateUser")]
-    partial class UpdateUser
+    [Migration("20220214233333_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,6 +112,169 @@ namespace Repository.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Model.Entities.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Lastname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+                });
+
+            modelBuilder.Entity("Model.Entities.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ISBN")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Pages")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("PublicationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("Model.Entities.BookCoverPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId")
+                        .IsUnique();
+
+                    b.ToTable("BookCoverPhoto");
+                });
+
+            modelBuilder.Entity("Model.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("Model.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BookISBN")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CommentedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("CommenterId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CommenterUsername")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("CommenterId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Model.Entities.Connection", b =>
                 {
                     b.Property<string>("ConnectionId")
@@ -182,7 +345,6 @@ namespace Repository.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -190,14 +352,13 @@ namespace Repository.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -206,31 +367,14 @@ namespace Repository.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Interests")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Introduction")
-                        .HasColumnType("text");
-
-                    b.Property<string>("KnownAs")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("LastActive")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LookingFor")
-                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -286,6 +430,21 @@ namespace Repository.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Model.Entities.LikedBook", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("LikedBooks");
+                });
+
             modelBuilder.Entity("Model.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -299,10 +458,10 @@ namespace Repository.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DateRead")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("MessageSent")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("RecipientDeleted")
                         .HasColumnType("boolean");
@@ -397,6 +556,66 @@ namespace Repository.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Model.Entities.Book", b =>
+                {
+                    b.HasOne("Model.Entities.Identity.AppUser", null)
+                        .WithMany("OwnedBooks")
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("Model.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Model.Entities.Cart", null)
+                        .WithMany("Books")
+                        .HasForeignKey("CartId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Model.Entities.BookCoverPhoto", b =>
+                {
+                    b.HasOne("Model.Entities.Book", "Book")
+                        .WithOne("Photo")
+                        .HasForeignKey("Model.Entities.BookCoverPhoto", "BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("Model.Entities.Cart", b =>
+                {
+                    b.HasOne("Model.Entities.Identity.AppUser", "Owner")
+                        .WithOne("Cart")
+                        .HasForeignKey("Model.Entities.Cart", "OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Model.Entities.Comment", b =>
+                {
+                    b.HasOne("Model.Entities.Book", "Book")
+                        .WithMany("Comments")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Model.Entities.Identity.AppUser", "Commenter")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommenterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Commenter");
+                });
+
             modelBuilder.Entity("Model.Entities.Connection", b =>
                 {
                     b.HasOne("Model.Entities.Group", null)
@@ -419,6 +638,25 @@ namespace Repository.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Model.Entities.LikedBook", b =>
+                {
+                    b.HasOne("Model.Entities.Book", "Book")
+                        .WithMany("LikedBy")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Model.Entities.Identity.AppUser", "User")
+                        .WithMany("LikedBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
 
                     b.Navigation("User");
                 });
@@ -453,6 +691,26 @@ namespace Repository.Data.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("Model.Entities.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Model.Entities.Book", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("LikedBy");
+
+                    b.Navigation("Photo")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Model.Entities.Cart", b =>
+                {
+                    b.Navigation("Books");
+                });
+
             modelBuilder.Entity("Model.Entities.Group", b =>
                 {
                     b.Navigation("Connections");
@@ -465,9 +723,18 @@ namespace Repository.Data.Migrations
 
             modelBuilder.Entity("Model.Entities.Identity.AppUser", b =>
                 {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("LikedBooks");
+
                     b.Navigation("MessagesReceived");
 
                     b.Navigation("MessagesSent");
+
+                    b.Navigation("OwnedBooks");
 
                     b.Navigation("Photos");
 

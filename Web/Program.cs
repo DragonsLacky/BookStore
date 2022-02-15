@@ -1,7 +1,12 @@
+using Services;
+using Services.Extensions;
+using Services.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<LogUserActivity>();
@@ -26,6 +31,7 @@ builder.Services.AddSwaggerGen(c =>
 // Configure the HTTP request pipeline.
 
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {

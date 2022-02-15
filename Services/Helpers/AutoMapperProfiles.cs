@@ -1,7 +1,6 @@
-﻿namespace Services.Helpers;
+﻿using Model.Dtos.Creation;
 
-using AutoMapper;
-
+namespace Services.Helpers;
 
 public class AutoMapperProfiles : Profile
 {
@@ -37,6 +36,14 @@ public class AutoMapperProfiles : Profile
         //         opt => opt.MapFrom(src =>
         //             src.Recipient.Photos.FirstOrDefault(ph => ph.IsMain).Url));
         //
-        // CreateMap<DateTime, DateTime>().ConvertUsing(dateTime => DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
+        CreateMap<DateTime, DateTime>().ConvertUsing(dateTime => DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
+        CreateMap<Author, AuthorDto>();
+        CreateMap<Book, BookDto>()
+            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
+            .ForMember(dest => dest.AuthorLastName, opt => opt.MapFrom(src => src.Author.Lastname));
+        CreateMap<CreateBookDto, Book>()
+            .ForMember(book => book.Author,
+                opt => opt.MapFrom(src => new Author {Name = src.AuthorName, Lastname = src.AuthorLastName}));
+        CreateMap<Comment, CommentDto>();
     }
 }
